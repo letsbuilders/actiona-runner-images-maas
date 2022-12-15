@@ -67,7 +67,6 @@ $markdown += New-MDList -Style Unordered -Lines ($runtimesList | Sort-Object)
 $markdown += New-MDHeader "Package Management" -Level 3
 
 $packageManagementList = @(
-    (Get-HomebrewVersion),
     (Get-CpanVersion),
     (Get-GemVersion),
     (Get-MinicondaVersion),

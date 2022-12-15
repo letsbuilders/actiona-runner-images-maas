@@ -256,25 +256,25 @@ Describe "HHVM" -Skip:(Test-IsUbuntu22) {
     }
 }
 
-Describe "Homebrew" {
-    $brewToolset = (Get-ToolsetContent).brew
-    $testCases = $brewToolset | ForEach-Object { @{brewName = $_.name; brewCommand = $_.command} }
-
-    It "homebrew" {
-        "/home/linuxbrew/.linuxbrew/bin/brew --version" | Should -ReturnZeroExitCode
-    }
-
-    It "zstd has /usr/local/bin symlink" {
-        "/usr/local/bin/zstd" | Should -Exist
-    }
-
-    It "homebrew package <brewName>" -TestCases $testCases {
-        $brewPrefix = /home/linuxbrew/.linuxbrew/bin/brew --prefix $brewName
-        $brewPackage = Join-Path $brewPrefix "bin" $brewCommand
-
-        "$brewPackage --version" | Should -ReturnZeroExitCode
-    }
-}
+# Describe "Homebrew" {
+#     $brewToolset = (Get-ToolsetContent).brew
+#     $testCases = $brewToolset | ForEach-Object { @{brewName = $_.name; brewCommand = $_.command} }
+#
+#     It "homebrew" {
+#         "/home/linuxbrew/.linuxbrew/bin/brew --version" | Should -ReturnZeroExitCode
+#     }
+#
+#     It "zstd has /usr/local/bin symlink" {
+#         "/usr/local/bin/zstd" | Should -Exist
+#     }
+#
+#     It "homebrew package <brewName>" -TestCases $testCases {
+#         $brewPrefix = /home/linuxbrew/.linuxbrew/bin/brew --prefix $brewName
+#         $brewPackage = Join-Path $brewPrefix "bin" $brewCommand
+#
+#         "$brewPackage --version" | Should -ReturnZeroExitCode
+#     }
+# }
 
 Describe "Julia" {
     It "julia" {
