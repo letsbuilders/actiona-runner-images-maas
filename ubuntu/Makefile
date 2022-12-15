@@ -25,7 +25,7 @@ custom-cloudimg.tar.gz: clean
 
 custom-ubuntu.tar.gz: clean seeds-flat.iso OVMF_VARS.fd \
 			packages/custom-packages.tar.gz
-	sudo ${PACKER} init . && sudo PACKER_LOG=1 ${PACKER} build -only=qemu.flat .
+	sudo ${PACKER} init . && sudo PACKER_LOG=0 ${PACKER} build -only=qemu.flat .
 
 custom-ubuntu-lvm.dd.gz: clean seeds-lvm.iso OVMF_VARS.fd
 	sudo ${PACKER} init . && sudo PACKER_LOG=1 ${PACKER} build -only=qemu.lvm .
