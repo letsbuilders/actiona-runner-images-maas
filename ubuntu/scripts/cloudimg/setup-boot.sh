@@ -26,13 +26,3 @@ fi
 if  [ ! -z  "${https_proxy}" ]; then
   echo "Acquire::https::Proxy \"${https_proxy}\";" >> ${packer_apt_proxy_config}
 fi
-
-# Reset cloud-init, so that it can run again when MAAS deploy the image.
-cloud-init clean --logs
-
-# The cloud image for qemu has a kernel already. Remove it, since the user
-# should either install a kernel in the customize script, or let MAAS install
-# the right kernel when deploying.
-apt-get remove --purge -y linux-virtual 'linux-image-*'
-apt-get autoremove --purge -yq
-apt-get clean -yq

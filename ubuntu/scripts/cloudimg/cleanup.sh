@@ -17,6 +17,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Reset cloud-init, so that it can run again when MAAS deploy the image.
+cloud-init clean --logs
+
+# The cloud image for qemu has a kernel already. Remove it, since the user
+# should either install a kernel in the customize script, or let MAAS install
+# the right kernel when deploying.
+apt-get remove --purge -y linux-virtual 'linux-image-*'
+apt-get autoremove --purge -yq
+apt-get clean -yq
 
 # cloud-init put networking in place on initial boot. Let's remove that, to
 # allow MAAS to configure the networking on deploy.
@@ -32,3 +41,5 @@ sed -i s/^root:[^:]*/root:*/ /etc/shadow
 rm -r /root/.ssh
 rm -r /root/.cache
 rm -r /etc/ssh/ssh_host_*
+
+df -h
