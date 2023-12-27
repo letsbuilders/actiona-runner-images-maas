@@ -5,6 +5,8 @@
 ##  Caveat: Brew MUST NOT be used to install any tool during the image build to avoid dependencies, which may come along with the tool
 ################################################################################
 
+touch /.dockerenv
+
 # Source the helpers
 source $HELPER_SCRIPTS/etc-environment.sh
 source $HELPER_SCRIPTS/install.sh
@@ -27,5 +29,7 @@ gfortran=$(brew --prefix)/bin/gfortran
 if [[ -e $gfortran ]]; then
     rm $gfortran
 fi
+
+rm -f /.dockerenv
 
 invoke_tests "Tools" "Homebrew"
