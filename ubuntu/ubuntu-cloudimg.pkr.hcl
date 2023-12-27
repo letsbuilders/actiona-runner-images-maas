@@ -29,15 +29,15 @@ source "null" "dependencies" {
 
 source "qemu" "cloudimg" {
   boot_wait      = "2s"
-  cpus           = 8
+  cpus           = 10
   disk_image     = true
-  disk_size      = "120G"
+  disk_size      = "70G"
   format         = "qcow2"
   headless       = var.headless
   http_directory = var.http_directory
   iso_checksum   = "file:https://cloud-images.ubuntu.com/${var.ubuntu_series}/current/SHA256SUMS"
   iso_url        = "https://cloud-images.ubuntu.com/${var.ubuntu_series}/current/${var.ubuntu_series}-server-cloudimg-${var.architecture}.img"
-  memory         = 4096
+  memory         = 8192
   qemu_binary    = "qemu-system-${lookup(local.qemu_arch, var.architecture, "")}"
   qemu_img_args {
     create = ["-F", "qcow2"]
@@ -159,7 +159,7 @@ build {
 
   provisioner "file" {
     destination = "${var.image_folder}/docs-gen/"
-    source      = "${path.root}/../../helpers/software-report-base"
+    source      = "${path.root}/../helpers/software-report-base"
   }
 
   provisioner "file" {

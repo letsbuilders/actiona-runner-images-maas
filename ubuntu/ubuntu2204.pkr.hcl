@@ -42,51 +42,51 @@ variable "client_secret" {
   sensitive = true
 }
 
-variable "dockerhub_login" {
-  type    = string
-  default = "${env("DOCKERHUB_LOGIN")}"
-}
+#variable "dockerhub_login" {
+#  type    = string
+#  default = "${env("DOCKERHUB_LOGIN")}"
+#}
 
-variable "dockerhub_password" {
-  type    = string
-  default = "${env("DOCKERHUB_PASSWORD")}"
-}
+#variable "dockerhub_password" {
+#  type    = string
+#  default = "${env("DOCKERHUB_PASSWORD")}"
+#}
+#
+#variable "helper_script_folder" {
+#  type    = string
+#  default = "/imagegeneration/helpers"
+#}
 
-variable "helper_script_folder" {
-  type    = string
-  default = "/imagegeneration/helpers"
-}
+#variable "image_folder" {
+#  type    = string
+#  default = "/imagegeneration"
+#}
+#
+#variable "image_os" {
+#  type    = string
+#  default = "ubuntu20"
+#}
+#
+#variable "image_version" {
+#  type    = string
+#  default = "dev"
+#}
+#
+#variable "imagedata_file" {
+#  type    = string
+#  default = "/imagegeneration/imagedata.json"
+#}
 
-variable "image_folder" {
-  type    = string
-  default = "/imagegeneration"
-}
-
-variable "image_os" {
-  type    = string
-  default = "ubuntu20"
-}
-
-variable "image_version" {
-  type    = string
-  default = "dev"
-}
-
-variable "imagedata_file" {
-  type    = string
-  default = "/imagegeneration/imagedata.json"
-}
-
-variable "installer_script_folder" {
-  type    = string
-  default = "/imagegeneration/installers"
-}
-
-variable "install_password" {
-  type      = string
-  default   = ""
-  sensitive = true
-}
+#variable "installer_script_folder" {
+#  type    = string
+#  default = "/imagegeneration/installers"
+#}
+#
+#variable "install_password" {
+#  type      = string
+#  default   = ""
+#  sensitive = true
+#}
 
 variable "location" {
   type    = string
