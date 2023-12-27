@@ -63,6 +63,7 @@ Describe "Rust" {
         }
     }
 }
+
 Describe "Docker" {
     It "docker" {
         "docker --version" | Should -ReturnZeroExitCode
@@ -79,13 +80,13 @@ Describe "Docker" {
     It "docker-credential-ecr-login" {
         "docker-credential-ecr-login -v" | Should -ReturnZeroExitCode
     }
+}
 
-    Context "docker images" {
-        $testCases = (Get-ToolsetContent).docker.images | ForEach-Object { @{ ImageName = $_ } }
+Describe "Docker images" {
+    $testCases = (Get-ToolsetContent).docker.images | ForEach-Object { @{ ImageName = $_ } }
 
-        It "<ImageName>" -TestCases $testCases {
-           sudo docker images "$ImageName" --format "{{.Repository}}" | Should -Not -BeNullOrEmpty
-        }
+    It "<ImageName>" -TestCases $testCases {
+       sudo docker images "$ImageName" --format "{{.Repository}}" | Should -Not -BeNullOrEmpty
     }
 }
 
@@ -111,13 +112,9 @@ Describe "Bazel" {
 }
 
 Describe "clang" {
-    [array]$testCases = (Get-ToolsetContent).clang.Versions | ForEach-Object { @{ClangVersion = $_} }
+    $testCases = (Get-ToolsetContent).clang.Versions | ForEach-Object { @{ClangVersion = $_} }
 
     It "clang <ClangVersion>" -TestCases $testCases {
-        param (
-            [string] $ClangVersion
-        )
-
         "clang-$ClangVersion --version" | Should -ReturnZeroExitCode
         "clang++-$ClangVersion --version" | Should -ReturnZeroExitCode
         "clang-format-$ClangVersion --version" | Should -ReturnZeroExitCode
@@ -136,34 +133,22 @@ Describe "erlang" -Skip:(Test-IsUbuntu22) {
     $testCases = @("erl -version", "erlc -v", "rebar3 -v") | ForEach-Object { @{ErlangCommand = $_} }
 
     It "erlang <ErlangCommand>" -TestCases $testCases {
-        param (
-            [string] $ErlangCommand
-        )
-
         "$ErlangCommand" | Should -ReturnZeroExitCode
     }
 }
 
 Describe "gcc" {
-    [array]$testCases = (Get-ToolsetContent).gcc.Versions | ForEach-Object { @{GccVersion = $_} }
+    $testCases = (Get-ToolsetContent).gcc.Versions | ForEach-Object { @{GccVersion = $_} }
 
     It "gcc <GccVersion>" -TestCases $testCases {
-        param (
-            [string] $GccVersion
-        )
-
         "$GccVersion --version" | Should -ReturnZeroExitCode
     }
 }
 
 Describe "gfortran" {
-    [array]$testCases = (Get-ToolsetContent).gfortran.Versions | ForEach-Object { @{GfortranVersion = $_} }
+    $testCases = (Get-ToolsetContent).gfortran.Versions | ForEach-Object { @{GfortranVersion = $_} }
 
     It "gfortran <GfortranVersion>" -TestCases $testCases {
-        param (
-            [string] $GfortranVersion
-        )
-
         "$GfortranVersion --version" | Should -ReturnZeroExitCode
     }
 }
@@ -208,8 +193,7 @@ Describe "Sbt" {
 
 Describe "Selenium" {
     It "Selenium is installed" {
-        $seleniumBinaryName = (Get-ToolsetContent).selenium.binary_name
-        $seleniumPath = Join-Path "/usr/share/java" "$seleniumBinaryName.jar"
+        $seleniumPath = Join-Path "/usr/share/java" "selenium-server.jar"
         $seleniumPath | Should -Exist
     }
 }
@@ -217,6 +201,16 @@ Describe "Selenium" {
 Describe "Terraform" {
     It "terraform" {
         "terraform --version" | Should -ReturnZeroExitCode
+    }
+}
+
+Describe "Zstd" {
+    It "zstd" {
+        "zstd --version" | Should -ReturnZeroExitCode
+    }
+
+    It "pzstd" {
+        "pzstd --version" | Should -ReturnZeroExitCode
     }
 }
 
@@ -231,16 +225,14 @@ Describe "Git" {
         "git --version" | Should -ReturnZeroExitCode
     }
 
-    It "git-lfs" {
-        "git-lfs --version" | Should -ReturnZeroExitCode
-    }
-
     It "git-ftp" {
         "git-ftp --version" | Should -ReturnZeroExitCode
     }
+}
 
-    It "hub-cli" {
-        "hub --version" | Should -ReturnZeroExitCode
+Describe "Git-lfs" {
+    It "git-lfs" {
+        "git-lfs --version" | Should -ReturnZeroExitCode
     }
 }
 
@@ -256,25 +248,11 @@ Describe "HHVM" -Skip:(Test-IsUbuntu22) {
     }
 }
 
-# Describe "Homebrew" {
-#     $brewToolset = (Get-ToolsetContent).brew
-#     $testCases = $brewToolset | ForEach-Object { @{brewName = $_.name; brewCommand = $_.command} }
-#
-#     It "homebrew" {
-#         "/home/linuxbrew/.linuxbrew/bin/brew --version" | Should -ReturnZeroExitCode
-#     }
-#
-#     It "zstd has /usr/local/bin symlink" {
-#         "/usr/local/bin/zstd" | Should -Exist
-#     }
-#
-#     It "homebrew package <brewName>" -TestCases $testCases {
-#         $brewPrefix = /home/linuxbrew/.linuxbrew/bin/brew --prefix $brewName
-#         $brewPackage = Join-Path $brewPrefix "bin" $brewCommand
-#
-#         "$brewPackage --version" | Should -ReturnZeroExitCode
-#     }
-# }
+Describe "Homebrew" {
+    It "homebrew" {
+        "/home/linuxbrew/.linuxbrew/bin/brew --version" | Should -ReturnZeroExitCode
+    }
+}
 
 Describe "Julia" {
     It "julia" {
@@ -284,19 +262,19 @@ Describe "Julia" {
 
 Describe "Kubernetes tools" {
     It "kind" {
-        "kind --version" | Should -ReturnZeroExitCode
+        "kind version" | Should -ReturnZeroExitCode
     }
 
     It "kubectl" {
-        "kubectl version" | Should -MatchCommandOutput "Client Version: version.Info"
+        "kubectl version --client=true" | Should -OutputTextMatchingRegex "Client Version: v"
     }
 
     It "helm" {
-        "helm version" | Should -ReturnZeroExitCode
+        "helm version --short" | Should -ReturnZeroExitCode
     }
 
     It "minikube" {
-        "minikube version" | Should -ReturnZeroExitCode
+        "minikube version --short" | Should -ReturnZeroExitCode
     }
 
     It "kustomize" {
@@ -330,17 +308,8 @@ Describe "Pulumi" {
 
 Describe "Phantomjs" -Skip:(Test-IsUbuntu22) {
     It "phantomjs" {
+        $env:OPENSSL_CONF="/etc/ssl"
         "phantomjs --version" | Should -ReturnZeroExitCode
-    }
-}
-
-Describe "GraalVM" -Skip:(Test-IsUbuntu18) {
-    It "graalvm" {
-        '$GRAALVM_11_ROOT/bin/java -version' | Should -ReturnZeroExitCode
-    }
-
-    It "native-image" {
-        '$GRAALVM_11_ROOT/bin/native-image --version' | Should -ReturnZeroExitCode
     }
 }
 
@@ -348,12 +317,16 @@ Describe "Containers" {
     $testCases = @("podman", "buildah", "skopeo") | ForEach-Object { @{ContainerCommand = $_} }
 
     It "<ContainerCommand>" -TestCases $testCases {
-        param (
-            [string] $ContainerCommand
-        )
-
         "$ContainerCommand -v" | Should -ReturnZeroExitCode
     }
+
+    # https://github.com/actions/runner-images/issues/7753
+    It "podman networking" -TestCases "podman CNI plugins" {
+        "podman network create -d bridge test-net" | Should -ReturnZeroExitCode
+        "podman network ls" | Should -Not -OutputTextMatchingRegex "Error"
+        "podman network rm test-net" | Should -ReturnZeroExitCode
+    }
+
 }
 
 Describe "nvm" {
@@ -366,33 +339,22 @@ Describe "Python" {
     $testCases = @("python", "pip", "python3", "pip3") | ForEach-Object { @{PythonCommand = $_} }
 
     It "<PythonCommand>" -TestCases $testCases {
-        param (
-            [string] $PythonCommand
-        )
-
         "$PythonCommand --version" | Should -ReturnZeroExitCode
-    }   
+    }
 }
 
 Describe "Ruby" {
     $testCases = @("ruby", "gem") | ForEach-Object { @{RubyCommand = $_} }
 
     It "<RubyCommand>" -TestCases $testCases {
-        param (
-            [string] $RubyCommand
-        )
-
         "$RubyCommand --version" | Should -ReturnZeroExitCode
     }
 
-    $gemTestCases = (Get-ToolsetContent).rubygems | ForEach-Object {
-        @{gemName = $_.name}
-    }
+    $gemTestCases = (Get-ToolsetContent).rubygems | ForEach-Object { @{gemName = $_.name} }
 
-    if ($gemTestCases)
-    {
+    if ($gemTestCases) {
         It "Gem <gemName> is installed" -TestCases $gemTestCases {
-            "gem list -i '^$gemName$'" | Should -MatchCommandOutput "true"
+            "gem list -i '^$gemName$'" | Should -OutputTextMatchingRegex "true"
         }
     }
 }
@@ -405,26 +367,22 @@ Describe "yq" {
 
 Describe "Kotlin" {
     It "kapt" {
-        "kapt -version"| Should -ReturnZeroExitCode
+        "kapt -version" | Should -ReturnZeroExitCode
     }
 
     It "kotlin" {
-        "kotlin -version"| Should -ReturnZeroExitCode
+        "kotlin -version" | Should -ReturnZeroExitCode
     }
 
     It "kotlinc" {
-        "kotlinc -version"| Should -ReturnZeroExitCode
-    }
-
-    It "kotlinc-js" {
-        "kotlinc-js -version"| Should -ReturnZeroExitCode
+        "kotlinc -version" | Should -ReturnZeroExitCode
     }
 
     It "kotlinc-jvm" {
-        "kotlinc-jvm -version"| Should -ReturnZeroExitCode
+        "kotlinc-jvm -version" | Should -ReturnZeroExitCode
     }
 
     It "kotlin-dce-js" {
-        "kotlin-dce-js -version"| Should -ReturnZeroExitCode
+        "kotlin-dce-js -version" | Should -ReturnZeroExitCode
     }
 }
