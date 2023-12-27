@@ -29,7 +29,7 @@ source "null" "dependencies" {
 
 source "qemu" "cloudimg" {
   boot_wait      = "2s"
-  cpus           = 4
+  cpus           = 8
   disk_image     = true
   disk_size      = "120G"
   format         = "qcow2"
@@ -77,11 +77,11 @@ build {
   name    = "cloudimg.image"
   sources = ["source.qemu.cloudimg"]
 
+  # MAAS cloud-image
   provisioner "shell" {
     environment_vars = concat(local.proxy_env, ["DEBIAN_FRONTEND=noninteractive"])
     scripts          = ["${path.root}/scripts/cloudimg/setup-boot.sh"]
   }
-
 
   provisioner "shell" {
     environment_vars  = concat(local.proxy_env, ["DEBIAN_FRONTEND=noninteractive"])
@@ -107,10 +107,12 @@ build {
     scripts          = ["${path.root}/scripts/cloudimg/setup-curtin.sh"]
   }
 
+  # Fix for apt
   provisioner "shell" {
     inline = ["echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections"]
   }
 
+  # Github Actions Runner
   provisioner "shell" {
     execute_command = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
     inline          = ["mkdir ${var.image_folder}", "chmod 777 ${var.image_folder}"]
@@ -355,6 +357,13 @@ build {
   provisioner "shell" {
     execute_command = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
     inline          = ["mkdir -p /etc/vsts", "cp /tmp/ubuntu2204.conf /etc/vsts/machine_instance.conf"]
+  }
+
+  # MAAS cloud-image
+
+  provisioner "shell" {
+    environment_vars = ["DEBIAN_FRONTEND=noninteractive"]
+    scripts          = ["${path.root}/scripts/cloudimg/cleanup.sh"]
   }
 
   post-processor "shell-local" {
