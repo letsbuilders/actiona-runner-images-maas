@@ -18,6 +18,8 @@ use_checksum_comparison "/tmp/docker-compose-v1" "${external_hash}"
 install /tmp/docker-compose-v1 /usr/local/bin/docker-compose
 
 # Enable docker.service
+systemctl daemon-reload
+systemctl list-units --type=service
 systemctl is-active --quiet docker.service || systemctl start docker.service
 
 invoke_tests "Tools" "Docker-compose v1"
