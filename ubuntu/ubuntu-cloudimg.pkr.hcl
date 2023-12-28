@@ -277,12 +277,6 @@ build {
   }
 
   provisioner "shell" {
-    execute_command   = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
-    expect_disconnect = true
-    inline            = ["echo 'Reboot VM'", "sudo reboot"]
-  }
-
-  provisioner "shell" {
     environment_vars = ["HELPER_SCRIPTS=${var.helper_script_folder}", "INSTALLER_SCRIPT_FOLDER=${var.installer_script_folder}", "DOCKERHUB_LOGIN=${var.dockerhub_login}", "DOCKERHUB_PASSWORD=${var.dockerhub_password}"]
     execute_command  = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
     scripts          = ["${path.root}/scripts/build/install-docker.sh", "${path.root}/scripts/build/install-docker-compose.sh"]
@@ -315,7 +309,8 @@ build {
   provisioner "shell" {
     execute_command   = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
     expect_disconnect = true
-    inline            = ["echo 'Reboot VM'", "sudo reboot"]
+    inline            = ["echo 'Reboot VM'", "reboot"]
+    pause_after       = "1m0s"
   }
 
   provisioner "shell" {
