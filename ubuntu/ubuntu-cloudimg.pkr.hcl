@@ -31,7 +31,7 @@ source "qemu" "cloudimg" {
   boot_wait      = "2s"
   cpus           = 10
   disk_image     = true
-  disk_size      = "70G"
+  disk_size      = "140G"
   format         = "qcow2"
   headless       = var.headless
   http_directory = var.http_directory
