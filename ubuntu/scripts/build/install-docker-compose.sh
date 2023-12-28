@@ -17,4 +17,7 @@ external_hash="f3f10cf3dbb8107e9ba2ea5f23c1d2159ff7321d16f0a23051d68d8e2547b323"
 use_checksum_comparison "/tmp/docker-compose-v1" "${external_hash}"
 install /tmp/docker-compose-v1 /usr/local/bin/docker-compose
 
+# Enable docker.service
+systemctl is-active --quiet docker.service || systemctl start docker.service
+
 invoke_tests "Tools" "Docker-compose v1"
