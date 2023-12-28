@@ -307,13 +307,6 @@ build {
   }
 
   provisioner "shell" {
-    execute_command   = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
-    expect_disconnect = true
-    inline            = ["echo 'Reboot VM'", "reboot"]
-    pause_after       = "1m0s"
-  }
-
-  provisioner "shell" {
     execute_command     = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
     pause_before        = "1m0s"
     scripts             = ["${path.root}/scripts/build/cleanup.sh"]
