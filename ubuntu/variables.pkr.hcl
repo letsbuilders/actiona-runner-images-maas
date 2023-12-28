@@ -48,3 +48,43 @@ variable "ssh_ubuntu_password" {
   type    = string
   default = "ubuntu"
 }
+
+variable "dockerhub_login" {
+  type    = string
+  default = "${env("DOCKERHUB_LOGIN")}"
+}
+
+variable "dockerhub_password" {
+  type    = string
+  default = "${env("DOCKERHUB_PASSWORD")}"
+}
+
+variable "helper_script_folder" {
+  type    = string
+  default = "/imagegeneration/helpers"
+}
+
+variable "image_folder" {
+  type    = string
+  default = "/imagegeneration"
+}
+
+variable "image_os" {
+  type    = string
+  default = "ubuntu22"
+}
+
+variable "image_version" {
+  type    = string
+  default = "dev"
+}
+
+variable "imagedata_file" {
+  type    = string
+  default = "/imagegeneration/imagedata.json"
+}
+
+variable "installer_script_folder" {
+  type    = string
+  default = "/imagegeneration/installers"
+}
