@@ -37,6 +37,14 @@ rm -r /root/.ssh
 rm -r /root/.cache
 rm -r /etc/ssh/ssh_host_*
 
+# The cloud image for qemu has a kernel already. Remove it, since the user
+# should either install a kernel in the customize script, or let MAAS install
+# the right kernel when deploying.
+# This step was originally in teh setup-boot.sh script, but it was moved here - since we need kernel
+# to be installed for docker installation.
+
+apt-get remove --purge -y linux-virtual 'linux-image-*'
+
 # Final Clean-up
 apt-get autoremove --purge -yq
 apt-get clean -yq
