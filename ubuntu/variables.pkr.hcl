@@ -49,11 +49,6 @@ variable "ssh_ubuntu_password" {
   default = "ubuntu"
 }
 
-variable "commit_url" {
-  type      = string
-  default   = ""
-}
-
 variable "dockerhub_login" {
   type    = string
   default = "${env("DOCKERHUB_LOGIN")}"
@@ -92,14 +87,4 @@ variable "imagedata_file" {
 variable "installer_script_folder" {
   type    = string
   default = "/imagegeneration/installers"
-}
-
-variable "install_password" {
-  type  = string
-  default = ""
-}
-
-variable "run_validation_diskspace" {
-  type    = bool
-  default = false
 }

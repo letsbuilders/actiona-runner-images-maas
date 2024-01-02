@@ -1,8 +1,8 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 #
 # setup-boot.sh - Set up the image after initial boot
 #
-# Copyright (C) 2022 Canonical
+# Copyright (C) 2023 Canonical
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+export DEBIAN_FRONTEND=noninteractive
 
 # Configure apt proxy if needed.
 packer_apt_proxy_config="/etc/apt/apt.conf.d/packer-proxy.conf"
@@ -26,3 +27,11 @@ fi
 if  [ ! -z  "${https_proxy}" ]; then
   echo "Acquire::https::Proxy \"${https_proxy}\";" >> ${packer_apt_proxy_config}
 fi
+
+# Reset cloud-init, so that it can run again when MAAS deploy the image.
+cloud-init clean --logs
+
+# Update apt listins first as they might be stale
+apt-get update -q
+
+
